@@ -3,10 +3,11 @@ import { Button } from "antd";
 import { useState } from "react";
 
 import questions from './questions';
+import scoringStandards from './scoringStandards';
 
 import MyButton from "./MyButton";
 
-function QuestionPage() {
+function QuestionPage({ restart }) {
   const [currentQuestionID, setCurrentQuestionID] = useState("q01");
   const [doneQuestionIDs, setDoneQuestionIDs] = useState([]);
   const [allQuestionChoices, setAllQuestionChoices] = useState([]);
@@ -14,9 +15,6 @@ function QuestionPage() {
 
 
   function renderQuestion(id) {
-    if (id === "END") {
-      return <><h1>END</h1></>
-    }
     const q = questions[id];
     return q.isSingleSelection ? (
       <>
@@ -56,13 +54,39 @@ function QuestionPage() {
                       }}/>
           </div>
         })}
-        <MyButton text="確認" className="option"
+        <MyButton text="確認" className="option checkButton" disabled={currentQuestionChoices.length === 0}
                   onClick={() => {
                     setDoneQuestionIDs([...doneQuestionIDs, currentQuestionID]);
                     setCurrentQuestionID(q.next);
-                    setAllQuestionChoices([...allQuestionChoices, currentQuestionChoices])
+                    setAllQuestionChoices([...allQuestionChoices, currentQuestionChoices.join('')])
                     setCurrentQuestionChoices([])
                   }} />
+      </>
+    )
+  }
+
+  function result() {
+    let point = {
+      "ENH": 0,
+      "EMI": 0,
+      "MAN": 0,
+      "TRA": 0,
+      "CON": 0,
+      "SPE": 0,
+    }
+    for (let i = 0; i < 20; i++){
+      for (let choice of allQuestionChoices[i]) {
+        scoringStandards[i][choice](point);
+      }
+    }
+    return (
+      <>
+        <h1>強化系：{point.ENH}</h1>
+        <h1>放出系：{point.EMI}</h1>
+        <h1>操作系：{point.MAN}</h1>
+        <h1>變化系：{point.TRA}</h1>
+        <h1>具現化系：{point.CON}</h1>
+        <h1>特質系：{point.SPE}</h1>
       </>
     )
   }
@@ -75,10 +99,17 @@ function QuestionPage() {
                 setDoneQuestionIDs(doneQuestionIDs.slice(0, doneQuestionIDs.length - 1));
                 setAllQuestionChoices(allQuestionChoices.slice(0, allQuestionChoices.length - 1));
                 setCurrentQuestionChoices([]);
-              }} disabled={currentQuestionID === 'q01'}>返回上一題</Button>
-      <Button onClick={() => {console.log(allQuestionChoices); alert(doneQuestionIDs)}}>check</Button>
+              }} disabled={currentQuestionID === 'q01' || currentQuestionID === 'END'}>返回上一題</Button>
+      <Button className="backButton" type="primary"
+              onClick={() => {
+                setCurrentQuestionID('q01');
+                setDoneQuestionIDs([]);
+                setAllQuestionChoices([]);
+                setCurrentQuestionChoices([]);
+                restart();
+              }} >重玩</Button>
       <div className="questionBlock">
-        {renderQuestion(currentQuestionID)}
+        {currentQuestionID === "END" ? result() : renderQuestion(currentQuestionID)}
       </div>
     </>
   )
