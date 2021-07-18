@@ -5,7 +5,8 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "start": "cd frontend/ && yarn start"
+    "start": "cd frontend/ && yarn start",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false && cd frontend/ && yarn install && cd .."
   },
   "dependencies": {
     "@babel/core": "^7.14.6",
