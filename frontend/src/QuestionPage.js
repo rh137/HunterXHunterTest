@@ -23,7 +23,7 @@ function QuestionPage() {
                       className="option"
                       onClick={() => {
                         setDoneQuestionIDs([...doneQuestionIDs, currentQuestionID]);
-                        setCurrentQuestionID(opt.next);
+                        setCurrentQuestionID(opt.next ? opt.next : q.next);
                         setChoices([...choices, opt.id])
                       }}/>
           </div>
