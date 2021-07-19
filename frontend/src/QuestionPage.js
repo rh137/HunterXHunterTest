@@ -80,14 +80,20 @@ function QuestionPage({ restart }) {
         scoringStandards[i][choice](point);
       }
     }
+    let maxVal = 0;
+    for (let k in point) {
+      if (point[k] >= maxVal) {
+        maxVal = point[k];
+      }
+    }
     return (
       <>
-        <h1>強化系：{point.ENH}</h1>
-        <h1>放出系：{point.EMI}</h1>
-        <h1>操作系：{point.MAN}</h1>
-        <h1>變化系：{point.TRA}</h1>
-        <h1>具現化系：{point.CON}</h1>
-        <h1>特質系：{point.SPE}</h1>
+        <h1 className={maxVal === point.ENH ? "maxVal" : ""}>強化系：{point.ENH}</h1>
+        <h1 className={maxVal === point.EMI ? "maxVal" : ""}>放出系：{point.EMI}</h1>
+        <h1 className={maxVal === point.MAN ? "maxVal" : ""}>操作系：{point.MAN}</h1>
+        <h1 className={maxVal === point.TRA ? "maxVal" : ""}>變化系：{point.TRA}</h1>
+        <h1 className={maxVal === point.CON ? "maxVal" : ""}>具現化系：{point.CON}</h1>
+        <h1 className={maxVal === point.SPE ? "maxVal" : ""}>特質系：{point.SPE}</h1>
       </>
     )
   }
