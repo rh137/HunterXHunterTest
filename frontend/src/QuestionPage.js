@@ -37,6 +37,7 @@ function QuestionPage({ restart }) {
       <>
         <h1>{q.header}</h1>
         <h1>{q.question}</h1>
+        <h4>（多選題，選擇至少一個答案後按確認）</h4>
         {q.options.map(opt => {
           return <div>
             <MyButton qid={id}
